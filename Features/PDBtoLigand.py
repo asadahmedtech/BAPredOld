@@ -98,12 +98,12 @@ def createLigandPDB(path, outname):
         f.flush()
     return
 
-def convertBulk(path):
+def convertBulk(path, outpath):
     files = os.listdir(path)
     for file in files:
         if(file.endswith(".pdb")):
             print("==> Converting ", file)
-            createLigandPDB(os.path.join(path, file), file[:-4] + "_ligand.pdb")
+            createLigandPDB(os.path.join(path, file), os.path.join(outpath,file[:-4] + "_ligand.pdb"))
 
 if __name__ == "__main__":
-    convertBulk("in/")
+    convertBulk("/home/binnu/Asad/dataset/pdb_files", "/home/binnu/Asad/dataset/new_db/ligand_pdb")
