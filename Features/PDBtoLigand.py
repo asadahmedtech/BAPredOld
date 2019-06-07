@@ -16,6 +16,8 @@ parser = argparse.ArgumentParser(
 #                     help='name for the file with the prepared structures')
 # parser.add_argument('--water', '-w', default=False, type=bool,
 #                     help='whether to take HOH molecules')
+parser.add_argument('--fileformat', '-ff', default=1, type=int,
+                    help='0 for HETATM and 1 for HETATMXXXX')
 parser.add_argument('--verbose', '-v', default=False, type=bool,
                     help='whether to print messages')
 
@@ -51,19 +53,34 @@ def ExtractDatafromPDB(path):
 
     hetatm, hetatmcoords, conect, hoh, hohcoords = [], [], [], [], []
 
-    for line_number in range(len(formatted_data)):
-        i = formatted_data[line_number]
-        if(i[0] in ['CONECT', 'HETATM', 'HEADER']): 
-            if(i[0] == 'HETATM' and i[3] != 'HOH'):
-                hetatm.append(data[line_number])
-                hetatmcoords.append(i[1])
-            if(i[0] == 'CONECT'):
-                conect.append(data[line_number])
-            if(i[0] == 'HETATM' and i[3] =='HOH'):
-                hoh.append(data[line_number])
-                hohcoords.append(i[1])
-            if(i[0] == 'HEADER'):
-                header = data[line_number]
+    if(not args.fileformat):
+        for line_number in range(len(formatted_data)):
+            i = formatted_data[line_number]
+            if(i[0] in ['CONECT', 'HETATM', 'HEADER']): 
+                if(i[0] == 'HETATM' and i[3] != 'HOH'):
+                    hetatm.append(data[line_number])
+                    hetatmcoords.append(i[1])
+                if(i[0] == 'CONECT'):
+                    conect.append(data[line_number])
+                if(i[0] == 'HETATM' and i[3] =='HOH'):
+                    hoh.append(data[line_number])
+                    hohcoords.append(i[1])
+                if(i[0] == 'HEADER'):
+                    header = data[line_number]
+    else:
+        for line_number in range(len(formatted_data)):
+            i = formatted_data[line_number]
+            if(i[0][:6] in ['CONECT', 'HETATM', 'HEADER']): 
+                if(i[0][:6] == 'HETATM' and i[2] != 'HOH'):
+                    hetatm.append(data[line_number])
+                    hetatmcoords.append(i[0][6:])
+                if(i[0][:6] == 'CONECT'):
+                    conect.append(data[line_number])
+                if(i[0][:6] == 'HETATM' and i[2] =='HOH'):
+                    hoh.append(data[line_number])
+                    hohcoords.append(i[0][6:])
+                if(i[0][:6] == 'HEADER'):
+                    header = data[line_number]
 
     del data, formatted_data
 
