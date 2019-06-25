@@ -16,7 +16,7 @@ parser = argparse.ArgumentParser(
 #                     help='name for the file with the prepared structures')
 # parser.add_argument('--water', '-w', default=False, type=bool,
 #                     help='whether to take HOH molecules')
-parser.add_argument('--fileformat', '-ff', default=1, type=int,
+parser.add_argument('--fileformat', '-ff', default=0, type=int,
                     help='0 for HETATM and 1 for HETATMXXXX')
 parser.add_argument('--verbose', '-v', default=False, type=bool,
                     help='whether to print messages')
@@ -117,10 +117,14 @@ def createLigandPDB(path, outname):
 
 def convertBulk(path, outpath):
     files = os.listdir(path)
+    # not_conv_file = open("not_converted.txt", "r")
+    # not_conv = not_conv_file.readlines()
+    # not_conv_file.close()
+    # not_conv = [i[2:6] for i in not_conv]
     for file in files:
-        if(file.endswith(".pdb")):
+        if(file.endswith(".pdb")): # and file[-8:-4] in not_conv):
             print("==> Converting ", file)
             createLigandPDB(os.path.join(path, file), os.path.join(outpath,file[:-4] + "_ligand.pdb"))
 
 if __name__ == "__main__":
-    convertBulk("/home/binnu/Asad/dataset/pdb_files", "/home/binnu/Asad/dataset/new_db/ligand_pdb")
+    convertBulk("/home/binnu/Asad/dataset/obp_db/protein_pdb", "/home/binnu/Asad/dataset/obp_db/ligand_pdb")
